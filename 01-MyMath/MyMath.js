@@ -19,6 +19,7 @@ export class MyMath {
     }
 
     add(value) {
+        let a = "testing commit and push to GitHub"
 
     }
 
