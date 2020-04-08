@@ -1,4 +1,4 @@
-import {MyMath} from "../01-MyMath/MyMath.js";
+import { MyMath } from "../01-MyMath/MyMath.js";
 
 export class Calculator {
 
@@ -12,11 +12,9 @@ export class Calculator {
 
     setupNumPad() {
         let buttons = this.numpad.children;
-        let length = buttons.length;
-        for (let i = 0; i < length; i++) {
-            let innerButton = buttons[i].innerHTML;
-            buttons[i].addEventListener('click', this.onButtonClick.bind(this, innerButton));
-        } 
+        for (let button of buttons) {
+            button.addEventListener('click', this.onButtonClick.bind(this, button.innerHTML))
+        };
 
     }
 
