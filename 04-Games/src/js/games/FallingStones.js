@@ -1,5 +1,5 @@
 import { GameTemplate } from "./GameTemplate.js"
-import { MovableGameObject, Ball } from "../GameObject.js";
+import { MovableGameObject, Ball, GameObject } from "../GameObject.js";
 
 export class FallingStones extends GameTemplate {
 
@@ -8,34 +8,63 @@ export class FallingStones extends GameTemplate {
         this.player = new Player(175, 450, 50, 50, 5, 5);
         this.bullets = [];
         this.gameOver = false;
-        this.stones = [];
+        this.createStones();
+        
+        }
+
+        createStones() {
+            let size = 50;
+            let x = Math.floor(Math.random() * 400/size) * size;
+            this.stone = new MovableGameObject ( x, -100, size, 2*size,"#6bd26b", 0, 5 );
             
+        }
+        stoneColision(){
+            if(this.stone.y >= 500) {
+                this.createStones();
+            }
         }
 
         draw(ctx){
             this.player.draw(ctx);
-            if(this.bullets[0] != undefined) {
-                this.bullets.forEach(bullet => bullet.draw(ctx));
-            }    
+            this.stone.draw(ctx);
+            this.bullets.forEach(bullet => bullet.draw(ctx));
         }
 
         update(ctx){
             this.player.update(ctx);
-            if(this.bullets[0] != undefined) {
-                this.bullets.forEach(bullet => bullet.update(ctx));
-            }
-        
+            this.stone.update(ctx);
+            this.stoneColision();
+            this.bullets.forEach(bullet => bullet.update(ctx));
+            this.deleteProjektil();
+            this.projectileCollision();
         }
 
         createBullet() {
-            if (this.bullets.length == 10){
-                this.bullets = [];
-            }
-            this.bullets.push(new Ball(this.player.x, this.player.y, 20, 20, "#6bd26b", 0, -5));
+        this.bullets.push(new Ball(this.player.x, this.player.y, 20, 20, "#6bd26b", 0, -5));
         }
 
-        createStones() {
+
+        deleteProjektil(){
+        for (let bullet of this.bullets){
+            if (bullet.y < 50) {
+                this.bullets.shift();
+            }
         }
+        }
+
+        projectileCollision(){
+            this.bullets.forEach(bullet => {
+                if(GameObject.rectangleCollision(bullet, this.stone)) {
+                    console.log("hit");
+                    this.stone.y = 501;
+                    this.bullets.pop();
+                } })
+            
+
+        }
+
+
+
 
         bindControls() {
             this.inputBinding = {
